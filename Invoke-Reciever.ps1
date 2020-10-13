@@ -7,7 +7,7 @@ function Invoke-Reciever {
     )
     Write-Host
     Write-Host
-    Write-Host Starting Server
+    Write-Host Starting Server...
 
     $endpoint = new-object System.Net.IPEndPoint ([system.net.ipaddress]::any, $port)
     $listener = new-object System.Net.Sockets.TcpListener $endpoint

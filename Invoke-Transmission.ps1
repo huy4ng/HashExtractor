@@ -20,25 +20,15 @@ function Invoke-Transmission {
     $stream = $client.GetStream()
     $data = [text.Encoding]::Ascii.GetBytes($Message1)
     $stream.Write($data,0,$data.length)
-    $client.Close()
-    $client.Dispose()
-    do{
-        try   { $client = New-Object System.Net.Sockets.TcpClient $ip, $port } 
-        catch { Sleep 1 }
-    } while (-not $client.Connected)
-    $stream = $client.GetStream()
+    $garbagebytes = New-Object byte[] 10
+    $garbage = $stream.read($garbagebytes, 0, $garbagebytes.Length)
     $data = [text.Encoding]::Ascii.GetBytes($Message2)
     $stream.Write($data,0,$data.length)
-    $client.Close()
-    $client.Dispose()
-    do{
-        try   { $client = New-Object System.Net.Sockets.TcpClient $ip, $port } 
-        catch { Sleep 1 }
-    } while (-not $client.Connected)
-    $stream = $client.GetStream()
+    $garbagebytes = New-Object byte[] 10
+    $garbage = $stream.read($garbagebytes, 0, $garbagebytes.Length)
     $data = [text.Encoding]::Ascii.GetBytes($Message3)
     $stream.Write($data,0,$data.length)
-    Write-Host Finished
     $client.Close()
     $client.Dispose()
+    Write-Host Finished
 }

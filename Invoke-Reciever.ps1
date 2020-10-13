@@ -22,6 +22,7 @@ function Invoke-Reciever {
     $stream = $client.GetStream()
 
     Write-Host Connected
+    Write-Host
     Write-Host Recieveing Data...
 
     $bytes1 = $stream.read($byte1, 0, $byte1.Length)
@@ -31,6 +32,7 @@ function Invoke-Reciever {
     $bytes3 = $stream.read($byte3, 0, $byte3.Length)
 
     Write-Host Recieved all Data
+    Write-Host
     Write-Host Starting Data Processing...
     Write-Host Processing SAM
 
@@ -50,8 +52,11 @@ function Invoke-Reciever {
     [IO.File]::WriteAllBytes('.\SYSTEM', [Convert]::FromBase64String($msg3))
 
     Write-Host Processed SYSTEM
+    Write-Host
     Write-Host Finished Processing
+    Write-Host
     Write-Host Stopping Server
+    Write-Host
 
     $listener.Stop()
     $listener.Server.Dispose()

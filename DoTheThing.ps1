@@ -9,4 +9,4 @@ sleep 5
 start cmd "/c start sdclt"
 sleep 3
 Remove-Item "HKCU:\Software\Classes\Folder\shell\open\command"
-
+exit

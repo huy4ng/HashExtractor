@@ -34,6 +34,7 @@ function Invoke-Transmission {
     $stream.Write($Message2, 0 ,$Message2.Length)
     $stream.read($g, 0, $g.Length)
     $stream.Write($Message3, 0 ,$Message3.Length)
+    $stream.read($g, 0, $g.Length)
     $client.Close()
     $client.Dispose()
     Write-Host Finished

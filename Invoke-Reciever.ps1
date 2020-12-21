@@ -42,6 +42,7 @@ function Invoke-Reciever {
     $stream.read($msg2, 0, $msg2.Length)
     $stream.Write('0',0,1)
     $stream.read($msg3, 0, $msg3.Length)
+    $stream.Write('0',0,1)
 
     Write-Host Recieved all Data
     Write-Host
